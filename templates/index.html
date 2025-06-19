@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Гадалка онлайн</title>
+    <style>
+        body {
+            font-family: "Georgia", serif;
+            background: #f9f0e6;
+            color: #333;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 0 10px #d0c4b5;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            font-size: 1.1em;
+            margin-bottom: 15px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 1.1em;
+            background-color: #b28958;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+        .result {
+            margin-top: 20px;
+            background: #fff8e1;
+            padding: 15px;
+            border-radius: 8px;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔮 Онлайн-гадалка</h1>
+    <form method="post">
+        <label for="question">Задай вопрос:</label>
+        <input type="text" id="question" name="question" placeholder="Стоит ли менять работу?" required>
+        <button type="submit">Узнать предсказание</button>
+    </form>
+
+    {% if result %}
+    <div class="result">
+        <strong>Ответ:</strong> {{ result }}
+    </div>
+    {% endif %}
+</body>
+</html>
