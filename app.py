@@ -18,11 +18,19 @@ async def form_get(request: Request):
 @app.post("/", response_class=HTMLResponse)
 async def form_post(request: Request, question: str = Form(...)):
     prompt = f"Вопрос: {question}\nОтвет:"
-    input_ids = tokenizer(prompt, return_tensors="pt").input_ids
+    
+    print("== Вопрос:", question)
+    
+    inputs = tokenizer(prompt, return_tensors="pt", padding=True)
+    input_ids = inputs["input_ids"]
+    attention_mask = inputs["attention_mask"]
+
     with torch.no_grad():
+        print("== Начинаем генерацию")
         output = model.generate(
-            input_ids,
-            max_new_tokens=60,
+            input_ids=input_ids,
+            attention_mask=attention_mask,
+            max_new_tokens=40,  # уменьшено с 60
             do_sample=True,
             temperature=0.7,
             top_p=0.95,
@@ -30,9 +38,15 @@ async def form_post(request: Request, question: str = Form(...)):
             pad_token_id=tokenizer.eos_token_id,
             eos_token_id=tokenizer.eos_token_id
         )
+        print("== Генерация завершена")
+
     answer = tokenizer.decode(output[0], skip_special_tokens=True)
+    final_answer = answer.split("Ответ:")[-1].strip()
+    
+    print("== Ответ:", final_answer)
+
     return templates.TemplateResponse("index.html", {
         "request": request,
         "question": question,
-        "result": answer.split("Ответ:")[-1].strip()
+        "result": final_answer
     })
